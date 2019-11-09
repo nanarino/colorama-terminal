@@ -38,7 +38,7 @@ def _print(*args,r = False):
         elif isinstance(arg,BaseException):
             args[i] = Fore.RED + arg.__repr__() + Fore.RESET
         else:
-            pass
+            args[i] = arg.__str__()
     if r:
         return args[0]
     else:
