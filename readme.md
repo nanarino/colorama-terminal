@@ -8,13 +8,13 @@
 
 先安装依赖
 
-- 直接用python解释器运行（打开方式没有被修改的话可以直接双击运行）
+- 打开方式没有被修改的话可以直接双击运行，运行效果和python shell一样。
 
 - `from colorama_terminal import _print`引入，
 
   使用`_print()`函数代替`print()`。
   
-  运行时在cmd中python+文件名（需要设置环境变量）
+  cmd中python+文件名（需要设置环境变量）可以看到效果。
 
 ### 安装依赖
 
@@ -31,6 +31,8 @@ pip install colorama
 注意，直接双击运行或者cmd中python文件名执行。
 
 `demo-conn-mssql.py`，展示mssql查询结构的示例。
+
+![demo01](./img/demo01.jpg)
 
 
 
