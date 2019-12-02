@@ -44,6 +44,13 @@ def _print(*args, r = False):
     else:
         print(*args)
 
+#return color string
+class Colorexec():
+    def __init__(self, name, color):
+        self.name = name
+        self.color = color
+    def __str__(self):
+        return getattr(Fore, self.color) + self.name + Fore.RESET
 
 if __name__ == "__main__":
     while 1:
@@ -55,17 +62,4 @@ if __name__ == "__main__":
                 exec(ex)
         except Exception as e:
             print("Traceback (most recent call last):")
-            _print(e)
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
+            _print(e)         

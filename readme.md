@@ -6,25 +6,35 @@
 
 ## 使用方法
 
+先安装依赖
+
 - 直接用python解释器运行（打开方式没有被修改的话可以直接双击运行）
 
-- 在cmd的python交互式运行环境中`from colorama-terminal import _print`
+- `from colorama_terminal import _print`引入，
 
-  使用`_print()`函数代替`print()`
+  使用`_print()`函数代替`print()`。
+  
+  运行时在cmd中python+文件名（需要设置环境变量）
 
-
-
-## 依赖
+### 安装依赖
 
 第三方模块`colorama`
-
-### 安装
 
 ```bash
 pip install colorama
 ```
 
-### 为什么选用`colorama`模块
+
+
+## Demo
+
+注意，直接双击运行或者cmd中python文件名执行。
+
+`demo-conn-mssql.py`，展示mssql查询结构的示例。
+
+
+
+### 为什么选用`colorama`
 
 #### 直接使用代码
 
@@ -35,7 +45,7 @@ pip install colorama
 
 在我的电脑（Win7）上是无效。
 
-#### 使用第三方模块`termcolor`
+#### 使用`termcolor`
 
 ```python
 from termcolor import colored
@@ -43,9 +53,9 @@ from termcolor import colored
 print(colored("helloworld", "red"))
 ```
 
-在我的电脑（Win7）上依然是无效。
+在本人的电脑（Win7）上依然是无效。
 
-#### 使用第三方模块`colorama`
+#### 使用`colorama`
 
 ```python
 from colorama import  init, Fore
@@ -54,7 +64,7 @@ init(autoreset=True)
 print(Fore.RED + "helloworld" + Fore.RESET)
 ```
 
-在我的电脑（Win7）上终于有效了。
+在本人的电脑（Win7）上终于有效了。
 
 
 
@@ -75,3 +85,4 @@ python对象的`__str__()`方法在拼接颜色字符后
 无法为`built-in/extension`类型重写或拓展方法。
 
 只能重写一个类似print()的函数。
+
