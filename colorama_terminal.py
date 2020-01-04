@@ -8,6 +8,7 @@ def _print(*args, r = False):
     args = list(args)
     for i, arg in enumerate(args[:]):
         if isinstance(arg, bool):
+            args[i] = Fore.GREEN + str(arg) + Fore.RESET
         elif isinstance(arg, str):
             args[i] = Fore.YELLOW + "\'" + str(arg) + "\'" + Fore.RESET
         elif isinstance(arg, (int, float, complex)) or str(type(arg)) == "<class 'decimal.Decimal'>":
