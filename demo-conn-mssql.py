@@ -2,13 +2,14 @@ from colorama_terminal import _print, Colormsg
 import pymssql
 
 DATABASES = {
-    'default':{
+    'default': {
         "host": '192.168.10.1\\***',
         "user": "sa",
         "database": "******",
         "password": "***********"
     }  #"as_dict" = False
 }
+
 
 def _conn_create(name='default'):
     conn = pymssql.connect(**DATABASES[name])
@@ -17,29 +18,35 @@ def _conn_create(name='default'):
         raise Exception("数据库连接失败")
     else:
         _print(Colormsg("*" * 32 + "数据库连接成功" + "*" * 32, 'MAGENTA'))
-    return (cursor,conn)
+    return (cursor, conn)
+
 
 _cur, _conn = _conn_create()
 
+
 def execute(sql):
     _cur.execute(sql)
+
 
 #修改数据后提交事务
 def commit():
     _conn.commit()
 
+
 #调用存储过程，第一个参数是存储过程名字，存储过程的参数依次后跟。
-def callproc(proc_name,*args):
-    _cur.callproc(proc_name,args)
+def callproc(proc_name, *args):
+    _cur.callproc(proc_name, args)
+
 
 def query(sql):
     execute(sql)
     querylist = _cur.fetchall()
     for i in querylist:
         _print(i)
-    return Colormsg("%d行受影响"%len(querylist), 'GREEN')
+    return Colormsg("%d行受影响" % len(querylist), 'GREEN')
 
-def close(isExit = True):
+
+def close(isExit=True):
     try:
         _conn.close()
     except Exception as e:
@@ -53,8 +60,12 @@ def close(isExit = True):
 def query_tables():
     return query("select * from sys.tables")
 
+
 def query_columns_name(table_name):
-    return query("select name from syscolumns where id=(select max(id) from sysobjects where xtype='u' and name=\'"+ table_name +"\')")
+    return query(
+        "select name from syscolumns where id=(select max(id) from sysobjects where xtype='u' and name=\'"
+        + table_name + "\')")
+
 
 #查询所有存储过程
 def query_procedures():
@@ -79,9 +90,11 @@ group by Pr_Name
 order by Pr_Name
 """)
 
+
 #查询存储过程内容
 def query_procedure_text(proc_name):
-    return query("SELECT TEXT FROM syscomments WHERE id = object_id(\'" + proc_name + "\')")
+    return query("SELECT TEXT FROM syscomments WHERE id = object_id(\'" +
+                 proc_name + "\')")
 
 
 if __name__ == "__main__":
