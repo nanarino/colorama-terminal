@@ -1,7 +1,7 @@
 import sys
 #Compatible module of terminal color for Win7 and more
 from colorama import init, Fore
-init(autoreset=True)
+init(autoreset=False)
 
 
 #Connot set attributes of built-in/extension type
