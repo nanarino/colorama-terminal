@@ -1,3 +1,5 @@
+"""兼容Win7的在终端有颜色地打印python变量"""
+
 import sys
 #Compatible module of terminal color for Win7 and more
 from colorama import init, Fore
@@ -5,7 +7,13 @@ init(autoreset=False)
 
 
 #Connot set attributes of built-in/extension type
-def _print(*args, r=False):
+def _print(*args, r: bool = False):
+    '''对常见类型按字面量进行带颜色的打印
+
+        Args：
+            *args：需要打印的内容
+            r：如果为True，不打印返回args[0]的带颜色的真实字符串。
+    '''
     args = list(args)
     for i, arg in enumerate(args[:]):
         if isinstance(arg, bool):
@@ -48,21 +56,25 @@ def _print(*args, r=False):
         print(*args)
 
 
-#带颜色的消息类
-class Colormsg():
-    def __init__(self, msg, color):
+class Colormsg(str):
+    '''带颜色的消息类 默认是白色'''
+    color = 'WHITE'
+
+    def __init__(self, msg):
         self._msg = msg
+        super().__init__()
+
+    def set_color(self, color: str):
+        '''设置colorama支持的字体前景色名 全部大写'''
         self.color = color
+        return self
 
     def __str__(self):
-        return getattr(Fore, self.color) + self._msg + Fore.RESET
-
-    def __repr__(self):
-        return self._msg
+        return f'{getattr(Fore, self.color)}{super().__str__()}{Fore.RESET}'
 
 
-#进入交互式
 def shell():
+    '''进入交互式'''
     while 1:
         ex = input('>>> ')
         try:
@@ -75,10 +87,16 @@ def shell():
             _print(e)
 
 
-#进度条
-def proportion_bar(proportion, color):
+def proportion_bar(proportion: float, color: str):
+    '''直接在CMD中打印的进度条
+
+        Args:
+            proportion: 进度比 0-1
+            color: colorama支持的字体前景色名 全部大写
+    '''
     num = int(proportion * 25)
-    sys.stdout.write('\r%s%s' % (Colormsg("█" * num, color), "█" * (25 - num)))
+    sys.stdout.write('\r%s%s' % (Colormsg("█" * num).set_color(color), "█" *
+                                 (25 - num)))
     sys.stdout.write('\t%d%%' % (100 * proportion))
     sys.stdout.flush()
 
