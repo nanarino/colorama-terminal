@@ -1,4 +1,10 @@
+
+# -*- coding:utf-8 -*-
+# time: 2020/04/18
 """兼容Win7的在终端有颜色地打印python变量"""
+__author__ = 'nanarino'
+__all__ = ['_print','Colormsg','shell','proportion_bar']
+
 
 import sys
 #Compatible module of terminal color for Win7 and more
@@ -12,7 +18,7 @@ def _print(*args, r: bool = False):
 
         Args：
             *args：需要打印的内容
-            r：如果为True，不打印返回args[0]的带颜色的真实字符串。
+            r：如果为True，不打印返回带颜色的真实字符串。
     '''
     args = list(args)
     for i, arg in enumerate(args[:]):
@@ -60,7 +66,7 @@ class Colormsg(str):
     '''带颜色的消息类 默认是白色'''
     color = 'WHITE'
 
-    def __init__(self, msg):
+    def __init__(self, msg:str):
         self._msg = msg
         super().__init__()
 
@@ -71,6 +77,11 @@ class Colormsg(str):
 
     def __str__(self):
         return f'{getattr(Fore, self.color)}{super().__str__()}{Fore.RESET}'
+
+    @staticmethod
+    def from_built_in_type(o):
+        '''内置类型转带颜色的真实字符串'''
+        return _print(o, r=True)
 
 
 def shell():
