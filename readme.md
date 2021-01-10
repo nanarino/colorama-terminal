@@ -14,7 +14,7 @@ pip install colorama
 
 ## 使用
 
-带颜色的字符串
+带颜色的字符串 Colormsg类
 
 ```python
 import colorama_terminal as ct
@@ -29,14 +29,9 @@ print(raw_colormsg)
 
 # 打印复杂的数据
 ct.print([{1: True}, {"2": False}])
-
-# 行为与字符串完全一致，除了__str__()方法
-a = ct.Colormsg("helloworld").set_color('RED')
-b = ct.Colormsg("helloworld").set_color('GREEN')
-print(a == b)
 ```
 
-其他功能
+其他功能  print  proportion_bar shell函数
 
 ```python
 from colorama_terminal import * #内置的print被覆盖了
@@ -52,45 +47,3 @@ shell()
 ```
 
 注意，直接双击运行或者cmd中python文件名执行。
-
-
-
----
-
-
-
-### 为什么选用`colorama`
-
-因为测试电脑是win7
-
-#### 直接使用代码
-
-```python
-'\033[1;31;40m'    #1-高亮显示 31-前景色红色  40-背景色黑色
-'\033[0m'
-```
-
-在Win7的黑窗口中是无效。
-
-#### 使用`termcolor`
-
-```python
-from termcolor import colored
-
-print(colored("helloworld", "red"))
-```
-
-依然是无效。
-
-#### 使用`colorama`
-
-```python
-from colorama import  init, Fore
-
-init(autoreset=True)
-print(Fore.RED + "helloworld" + Fore.RESET)
-```
-
-在Win7上终于有效了。
-
-
