@@ -5,6 +5,7 @@ __author__ = 'nanarino'
 import sys
 from decimal import Decimal
 from colorama import init, Fore
+from functools import reduce
 init(autoreset=False)
 
 
@@ -51,80 +52,74 @@ class Colormsg(Colorstr, str):
         return Colormsg(super().__getitem__(item)).set_color(self.color)
 
 
-def print(obj: object,
+def print(*objects,
+          sep=' ',
           end: str = '\n',
           prefix: str = '',
           max_deep: int = 3,
           raw: bool = False,
-          isflush: bool = False) -> Colorstr:
+          flush: bool = False) -> Colorstr:
     """花里胡哨输出的print 如果raw为True会把将要输出的内容返回"""
     deep = 0
-    sys.stdout.write(prefix)
 
-    def to_color_str(*args):
+    def to_color_str(o):
+        if isinstance(o, Colorstr): return o
+        if o is None: return Colormsg('None').set_color('MAGENTA')
+        if isinstance(o, bool): return Colormsg(o).set_color('GREEN')
+        if isinstance(o, str): return Colormsg(repr(o)).set_color('YELLOW')
+        if isinstance(o, (
+                int,
+                float,
+                complex,
+                Decimal,
+        )):
+            return Colormsg(o).set_color('CYAN')
+        if isinstance(o, BaseException):
+            return Colormsg(repr(o)).set_color('RED')
         nonlocal deep
         deep += 1
-        args = list(args)
-        for i, arg in enumerate(args[:]):
-            if isinstance(arg, Colorstr): break
-            elif isinstance(arg, bool):
-                args[i] = Colormsg(arg).set_color('GREEN')
-            elif isinstance(arg, str):
-                args[i] = Colormsg(repr(arg)).set_color('YELLOW')
-            elif isinstance(arg, (
-                    int,
-                    float,
-                    complex,
-                    Decimal,
-            )):
-                args[i] = Colormsg(arg).set_color('CYAN')
-            elif isinstance(arg, tuple):
-                if deep > max_deep:
-                    args[i] = '(...,)'
-                else:
-                    args[i] = '('
-                    for j in arg:
-                        args[i] += to_color_str(j) + ', '
-                    args[i] = (args[i][:-1] or '(') + ')'
-            elif isinstance(arg, list):
-                if deep > max_deep:
-                    args[i] = '[...,]'
-                else:
-                    args[i] = '['
-                    for j in arg:
-                        args[i] += to_color_str(j) + ', '
-                    args[i] = (args[i][:-2] or '[') + ']'
-            elif isinstance(arg, set):
-                if deep > max_deep:
-                    args[i] = '{...,}'
-                else:
-                    args[i] = ''
-                    for j in arg:
-                        args[i] += to_color_str(j) + ', '
-                    args[i] = ['set()',
-                               '{' + args[i][:-2] + '}'][bool(args[i])]
-            elif isinstance(arg, dict):
-                if deep > max_deep:
-                    args[i] = '{:...,}'
-                else:
-                    args[i] = '{'
-                    for j, k in arg.items():
-                        args[i] += to_color_str(j) + ': ' + to_color_str(
-                            k) + ', '
-                    args[i] = (args[i][:-2] or '{') + '}'
-            elif args[i] is None:
-                args[i] = Colormsg('None').set_color('MAGENTA')
-            elif isinstance(arg, BaseException):
-                args[i] = Colormsg(repr(arg)).set_color('RED')
+        if isinstance(o, tuple):
+            if deep > max_deep:
+                ret = '(...,)'
             else:
-                args[i] = repr(arg)
+                ret = '('
+                for j in o:
+                    ret += to_color_str(j) + ', '
+                ret = (ret[:-1] or '(') + ')'
+        elif isinstance(o, list):
+            if deep > max_deep:
+                ret = '[...,]'
+            else:
+                ret = '['
+                for j in o:
+                    ret += to_color_str(j) + ', '
+                ret = (ret[:-2] or '[') + ']'
+        elif isinstance(o, set):
+            if deep > max_deep:
+                ret = '{...,}'
+            else:
+                ret = ''
+                for j in o:
+                    ret += to_color_str(j) + ', '
+                ret = ['set()', '{' + ret[:-2] + '}'][bool(ret)]
+        elif isinstance(o, dict):
+            if deep > max_deep:
+                ret = '{:...,}'
+            else:
+                ret = '{'
+                for j, k in o.items():
+                    ret += to_color_str(j) + ': ' + to_color_str(k) + ', '
+                ret = (ret[:-2] or '{') + '}'
+        else:
+            ret = repr(o)
         deep -= 1
-        return args[0]
+        return ret
 
-    if raw: return to_color_str(obj)
-    sys.stdout.write(str(to_color_str(obj)))
-    sys.stdout.write(end)
-    if isflush: sys.stdout.flush()
+    ret = reduce(lambda rets, o: rets + sep + to_color_str(o), objects,
+                 Colorstr(''))[len(str(sep)):]
+    if raw: return ret
+    sys.stdout.write(str(prefix + ret + end))
+    if flush: sys.stdout.flush()
 
 
 def shell():
@@ -155,7 +150,7 @@ def proportion_bar(proportion: float, color: str):
           '\t% 4d%%' % (100 * proportion),
           prefix='\r',
           end='',
-          isflush=True)
+          flush=True)
 
 
 if __name__ == "__main__":
