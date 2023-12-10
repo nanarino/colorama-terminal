@@ -2,19 +2,10 @@
 
 在终端有颜色地打印python变量。
 
-## 安装依赖
-
-第三方模块`colorama`
-
-```bash
-pip install colorama
-```
-
-
 
 ## 使用
 
-带颜色的字符串 Colormsg类
+带颜色的字符串 `Colormsg` 类
 
 ```python
 import colorama_terminal as ct
@@ -31,7 +22,7 @@ print(raw_colormsg)
 ct.print([{1: True}, {"2": False}])
 ```
 
-其他功能  print  proportion_bar shell函数
+其他功能  `proportion_bar shell` 函数
 
 ```python
 from colorama_terminal import * #内置的print被覆盖了
@@ -45,5 +36,3 @@ print('\nOK')
 # 进入交互式
 shell()
 ```
-
-注意，直接双击运行或者cmd中python文件名执行。

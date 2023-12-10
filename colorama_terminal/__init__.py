@@ -8,6 +8,8 @@ from colorama import init, Fore
 from functools import reduce
 init(autoreset=False)
 
+__all__ = ["Colorstr", "Colormsg", "proportion_bar", "shell"]
+
 
 class Colorstr(str):
     '''带颜色的字符串类'''
@@ -151,13 +153,3 @@ def proportion_bar(proportion: float, color: str):
           prefix='\r',
           end='',
           flush=True)
-
-
-if __name__ == "__main__":
-    print(Colormsg('开始启动...'))
-    import time
-    for i in range(0, 101):
-        time.sleep(0.02)
-        proportion_bar(i / 100, 'MAGENTA')
-    print(Colormsg('\n启动完成。'))
-    shell()
